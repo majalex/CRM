@@ -12,7 +12,13 @@ const schema = new mongoose.Schema ({
     street: {type: String, required: true},
     zipCode: {type: String, required: true},
     city: {type: String, required: true},
-    nip: {type: Number, required: true}
+    nip: {type: String, required: true},
+    events: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "ClientEvent",
+        },
+      ],
 }, { timestamps: true });
  
 module.exports = mongoose.model('Client', schema);

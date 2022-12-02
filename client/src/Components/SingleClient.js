@@ -1,65 +1,63 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import '../Styles/SingleCustomer.scss';
+import '../Styles/SingleClient.scss';
 import Navigation from './Navigation';
-import AddEventModal from "../Components/AddEventModal";
+import AddEventModal from "./AddEventModal";
+import dayjs from 'dayjs';
 
-const SingleCustomer = () => {
+const SingleClient = () => {
     const { id } = useParams()
     const [client, setClient] = useState({
         name: "",
         street: "",
         zipCode: "",
         city: "",
-        nip: ""
+        nip: "",
+        events: [],
     });
 
     const [isAddActionModalVisible, setIsAddActionModalVisible] = useState(false);
 
     useEffect(() => {
-        axios.get(`client/${id}`).then((res) => {
-            console.log(id);
+        axios.get(`http://localhost:8080/api/client/${id}`).then((res) => {
             setClient(res.data);
         });
     }, [id, isAddActionModalVisible]);
 
     const deleteClientEvent = (clientEventId) => {
         axios
-            .delete(`/clientEvent/delete/${id}`, {
+            .delete(`http://localhost:8080/api/clientEvent/delete/${id}`, {
                 data: { clientEventId: clientEventId },
             })
             .then((res) => {
-                console.log(res.data);
-                axios.get(`customer/${id}`).then((res) => {
-                    console.log(id);
+                axios.get(`http://localhost:8080/api/client/${id}`).then((res) => {
                     setClient(res.data);
                 });
             });
     };
 
-    // const getClient = async () => {
-    //     const { data } = await axios.get(`http://localhost:8080/api/` + id);
-    //     setClient(data);
-    // };
-
-
-
-
-
     return (
         <>
             <Navigation></Navigation>
-            <div className='customer' key={client._id}>
-                <h2>{client.name}</h2>
-                <h3>Adres:</h3>
-                <p>{client.street}</p>
-                <p>{client.zipCode}</p>
-                <p>{client.city}</p>
-                <p>NIP: {client.nip}</p>
-            </div>
-            <div className="action">
-                <h1>Akcje</h1>
+            <div className="customer">
+                <div>
+                    <h2>{client.name}</h2>
+                    <strong>Adres</strong>
+                    <address>
+                        {client.street} <br />
+                        {client.zipCode} <br />
+                        {client.city} <br />
+                        NIP: {client.nip}
+                    </address>
+                </div>
+                <hr></hr>
+                <div className="action">
+                    <h2>Akcje</h2>
+                    <button onClick={() => setIsAddActionModalVisible(true)}>
+                        Dodaj nową
+                    </button>
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -77,7 +75,9 @@ const SingleCustomer = () => {
                                     <td>{index + 1}.</td>
                                     <td>{event.description}</td>
                                     <td>{event.type}</td>
-                                    <td>{event.date}</td>
+                                    <td>
+                                        {`${dayjs(event.date).format('DD/MM/YYYY (dddd)')}`}
+                                    </td>
                                     <td>
                                         <button onClick={() => deleteClientEvent(event._id)}>
                                             Usuń
@@ -89,17 +89,15 @@ const SingleCustomer = () => {
                         })}
                     </tbody>
                 </table>
+                {isAddActionModalVisible &&
+                    <AddEventModal
+                        isAddActionModalVisible={isAddActionModalVisible}
+                        setIsAddActionModalVisible={setIsAddActionModalVisible}
+                        clientId={client._id} />
+                }
             </div>
-            <button onClick={() => setIsAddActionModalVisible(true)}>
-                Dodaj akcje
-            </button>
-            <AddEventModal
-                isAddActionModalVisible={isAddActionModalVisible}
-                setIsAddActionModalVisible={setIsAddActionModalVisible}
-                customerId={client._id}
-            />
         </>
-    )
+    );
 }
 
-export default SingleCustomer;
+export default SingleClient;

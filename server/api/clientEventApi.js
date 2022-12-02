@@ -18,9 +18,6 @@ router.post("/add/:clientId", function (req, res) {
 });
 
 router.delete("/delete/:clientId", function (req, res) {
-
-  console.log(req.body.clientEventId)
-  console.log(req.params.clientId)
   clientEvent.delete(
     req.params.clientId,
     req.body.clientEventId,

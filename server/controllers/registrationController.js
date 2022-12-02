@@ -2,7 +2,7 @@ const Client = require('../models/Client');
 
 
 function clientList(cb) {
-    Client.find().lean().exec(function(err, clients) {
+    Client.find().sort({createdAt:-1}).lean().exec(function(err, clients) {
         if(err) {
             cb(err)
         } else {
@@ -47,6 +47,7 @@ function clientDelete(id, cb) {
 
 function clientGet(id, cb) {
     Client.findById(id)
+    .populate("events")
       .exec(function (err, client) {
         if (err) {
           cb(err);

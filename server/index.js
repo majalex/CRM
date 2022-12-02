@@ -18,7 +18,7 @@ require('./models/ClientEvent')
 app.use('/', apiRouter);
 
 //api
-app.use("/api/registration", clientApi);
+app.use("/api/client", clientApi);
 app.use("/api/clientEvent", clientEventApi);
 
 

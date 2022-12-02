@@ -18,7 +18,7 @@ const Form = (props) => {
         }
 
         axios
-            .post("http://localhost:8080/api/add", {
+            .post("http://localhost:8080/api/client/add", {
                 name: name,
                 street: street,
                 zipCode: zipCode,

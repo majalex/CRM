@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import '../Styles/AddEventModal.scss';
 
 const AddEventModal = (props) => {
   const [formData, setFormData] = useState({
@@ -21,7 +22,7 @@ const AddEventModal = (props) => {
     e.preventDefault();
 
     axios
-      .post(`/clientEvent/add/${props.clientId}`, formData)
+      .post(`http://localhost:8080/api/clientEvent/add/${props.clientId}`, formData)
       .then((res) => {
         if (!res.data.error) {
           props.setIsAddActionModalVisible(false);
@@ -32,19 +33,16 @@ const AddEventModal = (props) => {
           });
         }
       });
+      window.location.reload(false)
   };
 
   return (
-    <div
-      show={props.isAddActionModalVisible}
-      onHide={() => props.setIsAddActionModalVisible(false)}
-    >
+    <div className="modal">
       <div>
-        <h1>Dodaj akcję</h1>
+        <h1>Dodaj Akcję</h1>
       </div>
       <div>
         <form onSubmit={handleSubmit}>
-          <div className="mb-3" controlId="description">
             <label>Opis</label>
             <input
               name="description"
@@ -53,9 +51,7 @@ const AddEventModal = (props) => {
               value={formData.description}
               onChange={handleInputData}
             />
-          </div>
 
-          <div className="mb-3" controlId="type">
             <label>Rodzaj akcji</label>
             <select onChange={handleInputData} name="type">
               <option>Wybierz rodzaj</option>
@@ -63,9 +59,7 @@ const AddEventModal = (props) => {
               <option value="meeting">Spotkanie</option>
               <option value="email">Mail</option>
             </select>
-          </div>
 
-          <div className="mb-3" controlId="date">
             <label>Data</label>
             <input
               name="date"
@@ -74,14 +68,10 @@ const AddEventModal = (props) => {
               value={formData.date}
               onChange={handleInputData}
             />
-          </div>
 
-          <button type="submit">Dodaj</button>{` `}
-
+          <button type="submit">Dodaj</button>
           <button
-            type="button"
-            onClick={() => props.setIsAddActionModalVisible(false)}
-          >
+            onClick={() => props.setIsAddActionModalVisible(false)}>
             Zamknij
           </button>
         </form>
