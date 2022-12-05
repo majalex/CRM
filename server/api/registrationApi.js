@@ -53,7 +53,7 @@ router.put('/update/:id', function(req, res){
                 error: "User not found"
             });
         } else {
-            res.json(data);
+            res.json(client);
         }
     });
      

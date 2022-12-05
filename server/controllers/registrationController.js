@@ -24,23 +24,23 @@ function clientAdd(data, cb) {
 }
 
 function clientUpdate(id, data, cb) {
-    Client.updateOne({_id: id}, data, function(err, Client) {
+    Client.findOneAndUpdate({_id: id}, data, function(err, client) {
  
         if(err) {
             cb(err);
         } else {
-            cb(null, Client);
+            cb(null, client);
         }
  
     });
 }
 
 function clientDelete(id, cb) {
-    Client.deleteOne({_id: id},function (err, Client) {
+    Client.deleteOne({_id: id},function (err, client) {
         if (err) {
             cb(err);
         } else {
-            cb(null, Client);
+            cb(null, client);
         }
     });
 }

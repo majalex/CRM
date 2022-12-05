@@ -31,4 +31,18 @@ router.delete("/delete/:clientId", function (req, res) {
   );
 });
 
+router.update("/update/:clientId", function (req, res) {
+  clientEvent.update(
+    req.params.clientId,
+    req.body.clientEventId,
+    function (err, log) {
+      if (err) {
+        res.json({ error: true });
+      } else {
+        res.json(log);
+      }
+    }
+  );
+});
+
 module.exports = router;

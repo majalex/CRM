@@ -3,17 +3,13 @@ import { useState } from "react";
 import '../Styles/AddEventModal.scss';
 
 const AddEventModal = (props) => {
-  const [formData, setFormData] = useState({
-    description: "",
-    type: "",
-    date: "",
-  });
+
 
   const handleInputData = (e) => {
     const target = e.target;
     const name = target.name;
 
-    setFormData((data) => {
+    props.setFormData((data) => {
       return { ...data, [name]: target.value };
     });
   };
@@ -22,11 +18,11 @@ const AddEventModal = (props) => {
     e.preventDefault();
 
     axios
-      .post(`http://localhost:8080/api/clientEvent/add/${props.clientId}`, formData)
+      .post(`http://localhost:8080/api/clientEvent/add/${props.clientId}`, props.formData)
       .then((res) => {
         if (!res.data.error) {
           props.setIsAddActionModalVisible(false);
-          setFormData({
+          props.setFormData({
             description: "",
             type: "",
             date: "",
@@ -48,7 +44,7 @@ const AddEventModal = (props) => {
               name="description"
               as="textarea"
               placeholder="Opis"
-              value={formData.description}
+              value={props.formData.description}
               onChange={handleInputData}
             />
 
@@ -65,7 +61,7 @@ const AddEventModal = (props) => {
               name="date"
               type="date"
               placeholder="Data"
-              value={formData.date}
+              value={props.formData.date}
               onChange={handleInputData}
             />
 

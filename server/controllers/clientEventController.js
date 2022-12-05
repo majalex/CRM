@@ -35,7 +35,27 @@ function deleteClientEvent(clientId, clientEventId, cb) {
   });
 }
 
+
+
+function updateClientEvent(clientId, clientEventId, cb) {
+  Client.findById(clientId, function (err, client) {
+    if (err) return;
+
+    client.events.push(clientEventId);
+    client.save();
+  });
+
+  ClientEvent.findOneAndUpdate({ _id: clientEventId }, function (err, log) {
+    if (err) {
+      cb(err);
+    } else {
+      cb(null, log);
+    }
+  });
+}
+
 module.exports = {
   add: addClientEvent,
   delete: deleteClientEvent,
+  update: updateClientEvent,
 };

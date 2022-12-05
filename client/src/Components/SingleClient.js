@@ -4,7 +4,10 @@ import { useParams } from "react-router-dom";
 import '../Styles/SingleClient.scss';
 import Navigation from './Navigation';
 import AddEventModal from "./AddEventModal";
+import EditClientModal from "./modals/EditClientModal";
+import EditEvent from "./modals/EditEvent";
 import dayjs from 'dayjs';
+import 'dayjs/locale/pl';
 
 const SingleClient = () => {
     const { id } = useParams()
@@ -19,10 +22,19 @@ const SingleClient = () => {
 
     const [isAddActionModalVisible, setIsAddActionModalVisible] = useState(false);
 
-    useEffect(() => {
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+
+
+    const [isEventModalVisible, setIsEventModalVisible] = useState(false);
+
+    const getClient = () => {
         axios.get(`http://localhost:8080/api/client/${id}`).then((res) => {
             setClient(res.data);
         });
+    }
+
+    useEffect(() => {
+        getClient()
     }, [id, isAddActionModalVisible]);
 
     const deleteClientEvent = (clientEventId) => {
@@ -36,6 +48,12 @@ const SingleClient = () => {
                 });
             });
     };
+
+    const [formData, setFormData] = useState({
+        description: "",
+        type: "",
+        date: "",
+      });
 
     return (
         <>
@@ -51,6 +69,9 @@ const SingleClient = () => {
                         NIP: {client.nip}
                     </address>
                 </div>
+                <button onClick={() => setIsEditModalVisible(true)}>
+                    Edycja
+                </button>
                 <hr></hr>
                 <div className="action">
                     <h2>Akcje</h2>
@@ -76,13 +97,13 @@ const SingleClient = () => {
                                     <td>{event.description}</td>
                                     <td>{event.type}</td>
                                     <td>
-                                        {`${dayjs(event.date).format('DD/MM/YYYY (dddd)')}`}
+                                        {`${dayjs(event.date).locale('pl').format('dd, DD MMMM YYYY')}`}
                                     </td>
                                     <td>
                                         <button onClick={() => deleteClientEvent(event._id)}>
                                             Usuń
                                         </button>{" "}
-                                        <button>Edytuj</button>
+                                        <button onClick={() => setIsEventModalVisible(true)}>Edytuj</button>
                                     </td>
                                 </tr>
                             );
@@ -93,7 +114,30 @@ const SingleClient = () => {
                     <AddEventModal
                         isAddActionModalVisible={isAddActionModalVisible}
                         setIsAddActionModalVisible={setIsAddActionModalVisible}
-                        clientId={client._id} />
+                        clientId={client._id} 
+                        formData={formData}
+                        setFormData={setFormData}
+                        />
+                }
+                {isEditModalVisible &&
+                    <EditClientModal
+                        isEditModalVisible={isEditModalVisible}
+                        setIsEditModalVisible={setIsEditModalVisible}
+                        clientId={client._id}
+                        client={client}
+                        setClient={setClient}
+                        getClient={getClient}
+                    />
+                }
+                {isEventModalVisible &&
+                    <EditEvent
+                        isEventModalVisible={isEventModalVisible}
+                        setIsEventModalVisible={setIsEventModalVisible}
+                        clientId={client._id}
+                        client={client}
+                        setClient={setClient}
+                        getClient={getClient}
+                    />
                 }
             </div>
         </>
