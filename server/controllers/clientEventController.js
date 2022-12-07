@@ -37,7 +37,7 @@ function deleteClientEvent(clientId, clientEventId, cb) {
 
 
 
-function updateClientEvent(clientId, clientEventId, cb) {
+function updateClientEvent(clientId, clientEventId, data, cb) {
   Client.findById(clientId, function (err, client) {
     if (err) return;
 
@@ -45,7 +45,7 @@ function updateClientEvent(clientId, clientEventId, cb) {
     client.save();
   });
 
-  ClientEvent.findOneAndUpdate({ _id: clientEventId }, function (err, log) {
+  ClientEvent.findOneAndUpdate({ _id: clientEventId }, data, function (err, log) {
     if (err) {
       cb(err);
     } else {

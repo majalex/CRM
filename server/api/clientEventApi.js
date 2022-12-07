@@ -31,7 +31,7 @@ router.delete("/delete/:clientId", function (req, res) {
   );
 });
 
-router.update("/update/:clientId", function (req, res) {
+router.put("/update/:clientId", function (req, res) {
   clientEvent.update(
     req.params.clientId,
     req.body.clientEventId,

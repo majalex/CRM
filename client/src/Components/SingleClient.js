@@ -24,8 +24,9 @@ const SingleClient = () => {
 
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
+    
 
-    const [isEventModalVisible, setIsEventModalVisible] = useState(false);
+    const [editingEventId, setEditingEventId] = useState ('')
 
     const getClient = () => {
         axios.get(`http://localhost:8080/api/client/${id}`).then((res) => {
@@ -35,6 +36,7 @@ const SingleClient = () => {
 
     useEffect(() => {
         getClient()
+        // eslint-disable-next-line
     }, [id, isAddActionModalVisible]);
 
     const deleteClientEvent = (clientEventId) => {
@@ -103,7 +105,7 @@ const SingleClient = () => {
                                         <button onClick={() => deleteClientEvent(event._id)}>
                                             Usuń
                                         </button>{" "}
-                                        <button onClick={() => setIsEventModalVisible(true)}>Edytuj</button>
+                                        <button onClick={() => setEditingEventId(event._id)}>Edytuj</button>
                                     </td>
                                 </tr>
                             );
@@ -129,14 +131,17 @@ const SingleClient = () => {
                         getClient={getClient}
                     />
                 }
-                {isEventModalVisible &&
+                {editingEventId &&
                     <EditEvent
-                        isEventModalVisible={isEventModalVisible}
-                        setIsEventModalVisible={setIsEventModalVisible}
+                        editingEventId={editingEventId}
+                        setEditingEventId={setEditingEventId}
                         clientId={client._id}
                         client={client}
                         setClient={setClient}
                         getClient={getClient}
+                        formData={formData}
+                        setFormData={setFormData}
+
                     />
                 }
             </div>
